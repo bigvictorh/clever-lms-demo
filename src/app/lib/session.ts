@@ -9,7 +9,7 @@ export function generateSessionToken(user: any) {
   // Create a token with the user info, signed with a secret
   return jwt.sign(
     {
-      id: user.id,
+      id: user.clever_id,
       name: user.name,
       email: user.email,
     },

@@ -6,6 +6,7 @@ import { sql } from '@vercel/postgres';
 
 const token = process.env.DAC_TOKEN
 
+
 export class CleverDataFetcher {
 
   async fetch(url: string) {
@@ -25,7 +26,7 @@ export class CleverDataFetcher {
   }
   async fetchStudents() {
     const students = await this.fetch('https://api.clever.com/v3.0/users/657b35c16a1a3e5c217dcd8f/myStudents');
-    return students.data.map((data) => new Student(data.data));
+    return students.data.map((data:any) => new Student(data.data));
   }
 
   async getStudent(user_id: string) {
@@ -33,10 +34,10 @@ export class CleverDataFetcher {
     return student;
   }
 
-  async fetchSections() {
+  async fetchSections(userId: string) {
     noStore();
-    const section = await this.fetch('https://api.clever.com/v3.0/users/657b35c16a1a3e5c217dcd8f/sections');
-    return section.data.map((data) => new Section(data.data));
+    const section = await this.fetch(`https://api.clever.com/v3.0/users/${userId}/sections`);
+    return section.data.map((data:any) => new Section(data.data));
   }
 
    async getAssignment(sectionId: string, assignmentId: string) {
