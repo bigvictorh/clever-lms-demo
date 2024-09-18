@@ -6,6 +6,8 @@ import { inter } from '@/app/ui/fonts';
 import { AssignmentsTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import { fetchAssignmentsPages } from '@/app/lib/clever';
+import Breadcrumbs from '@/app/ui/assignments/breadcrumbs';
+
  
 export default async function Page({
     searchParams, params
@@ -24,9 +26,12 @@ export default async function Page({
     
     return (
       <div className="w-full">
-        <div className="flex w-full items-center justify-between">
-          <h1 className={`${inter.className} text-2xl`}>Assignments</h1>
-        </div>
+        <Breadcrumbs
+          breadcrumbs={[
+            { label: 'Sections', href: `/dashboard`},
+            { label: 'Assignments', href: `/dashboard/sections/${sectionID}/assignments`, active: true },
+          ]}
+        />
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
           <Search placeholder="Search assignments..." />
           <CreateAssignment sectionID={params.sectionID}/>

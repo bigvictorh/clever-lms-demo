@@ -9,6 +9,7 @@ export default async function Page({ params }: {params: {sectionID: string}}) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
+          { label: 'Sections', href: `/dashboard`},
           { label: 'Assignments', href: `/dashboard/sections/${sectionID}/assignments` },
           {
             label: 'Create Assignment',
