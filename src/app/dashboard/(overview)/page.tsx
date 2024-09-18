@@ -9,7 +9,7 @@ export default async function Home() {
     return( 
     <main>
       <h1 className={`${inter.className} mb-4 text-xl md:text-4xl`}>
-        Dashboard test
+        Dashboard
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       
