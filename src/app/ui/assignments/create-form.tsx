@@ -3,28 +3,23 @@
 'use client';
 
 import { useFormState } from 'react-dom';
-import { Assignment, Section } from '@/app/lib/definitions';
+import { useState } from 'react'; // Import useState for managing state
 import Link from 'next/link';
-import {
-  UserIcon,
-  UserGroupIcon,
-  PresentationChartBarIcon,
-  ClipboardDocumentCheckIcon,
-  InboxIcon,
-  PencilSquareIcon,
-  CalendarDaysIcon,
-  BookOpenIcon,
-  LinkIcon,
-  DocumentTextIcon,
-  Bars3CenterLeftIcon,
-  ChatBubbleLeftRightIcon,
-} from '@heroicons/react/24/outline';
+import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createAssignment } from '@/app/lib/actions';
 
 export default function Form({ section_id }: { section_id: string }) {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createAssignment.bind(null, section_id), initialState);
+  
+  const [assigneeMode, setAssigneeMode] = useState('all'); // Default to "all"
+
+  const students = [
+    { id: '1', name: 'John Doe' },
+    { id: '2', name: 'Jane Smith' },
+    { id: '3', name: 'Michael Johnson' }
+  ];
 
   return (
     <form action={dispatch}>
@@ -33,14 +28,17 @@ export default function Form({ section_id }: { section_id: string }) {
         {/* Assignment Title */}
         <div className="mb-4">
           <label htmlFor="title" className="mb-2 block text-sm font-medium">
-            Course Selection
+            Assignment Title
           </label>
           <div className="relative mt-2 rounded-md">
-          <select id="title" name="title">
-              <option selected>Algebra 1</option>
-              <option>Algebra 2</option>
-              <option>Geometry</option>
-          </select>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-400"
+              placeholder="Enter assignment title"
+              aria-describedby="title-error"
+            />
             <div id="title-error" aria-live="polite" aria-atomic="true">
               {state.errors?.title &&
                 state.errors.title.map((error: string) => (
@@ -51,24 +49,46 @@ export default function Form({ section_id }: { section_id: string }) {
             </div>
           </div>
         </div>
-        
+
+        {/* Assignment Description */}
+        <div className="mb-4">
+          <label htmlFor="description" className="mb-2 block text-sm font-medium">
+            Assignment Description
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <textarea
+              id="description"
+              name="description"
+              className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-400"
+              placeholder="Enter assignment description"
+              rows={4}
+              aria-describedby="description-error"
+            />
+            <div id="description-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.description &&
+                state.errors.description.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+        </div>
 
         {/* Due Date */}
         <div className="mb-4">
-          <label htmlFor="title" className="mb-2 block text-sm font-medium">
+          <label htmlFor="dueDate" className="mb-2 block text-sm font-medium">
             Due Date
           </label>
           <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="dueDate"
-                name="dueDate"
-                type="datetime-local"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-400"
-                aria-describedby='dueDate-error'
-              />
-              <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
+            <input
+              id="dueDate"
+              name="dueDate"
+              type="datetime-local"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-400"
+              aria-describedby="dueDate-error"
+            />
+            <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             <div id="dueDate-error" aria-live="polite" aria-atomic="true">
               {state.errors?.dueDate &&
                 state.errors.dueDate.map((error: string) => (
@@ -80,85 +100,107 @@ export default function Form({ section_id }: { section_id: string }) {
           </div>
         </div>
 
-        {/* Submission Types
-        <fieldset>
-          <legend className="mb-2 block text-sm font-medium">
-            Submission Types
-          </legend>
-          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-            <div className="flex gap-4">
-              <div className="flex items-center">
-                <input
-                  id="link"
-                  name="submission_types"
-                  type="checkbox"
-                  value="link"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                  aria-describedby='submission_types-error'
-                />
-                <label
-                  htmlFor="link"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  <LinkIcon className="h-4 w-4" /> Link 
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="file"
-                  name="submission_types"
-                  type="checkbox"
-                  value="file"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                />
-                <label
-                  htmlFor="file"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  <DocumentTextIcon className="h-4 w-4" /> File
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="text"
-                  name="submission_types"
-                  type="checkbox"
-                  value="text"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                />
-                <label
-                  htmlFor="text"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  <Bars3CenterLeftIcon className="h-4 w-4" /> Text
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="discussion"
-                  name="submission_types"
-                  type="checkbox"
-                  value="discussion"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                />
-                <label
-                  htmlFor="text"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  <ChatBubbleLeftRightIcon className="h-4 w-4" /> Discussion
-                </label>
-              </div>
-              <div id="submission_types-error" aria-live="polite" aria-atomic="true">
-                  {state.errors?.submission_types &&
-                    state.errors.submission_types.map((error: string) => (
-                      <p className="mt-2 text-sm text-red-500" key={error}>
-                        {error}
-                      </p>
-                    ))}
+        {/* Points Possible
+        <div className="mb-4">
+          <label htmlFor="points" className="mb-2 block text-sm font-medium">
+            Points Possible
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <input
+              id="points"
+              name="points"
+              type="number"
+              className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-400"
+              placeholder="Enter points possible"
+              aria-describedby="points-error"
+            />
+            <div id="points-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.points_possible &&
+                state.errors.points_possible.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+        </div>  */}
+
+        {/* Assignee Mode */}
+        <div className="mb-4">
+          <span className="mb-2 block text-sm font-medium">Assignee Mode</span>
+          <div className="flex gap-4">
+            <div className="flex items-center">
+              <input
+                id="assigneeAll"
+                name="assigneeMode"
+                type="radio"
+                value="all"
+                className="h-4 w-4 border-gray-300 text-gray-600 focus:ring-2"
+                checked={assigneeMode === 'all'}
+                onChange={() => setAssigneeMode('all')}
+                aria-describedby="assigneeMode-error"
+              />
+              <label htmlFor="assigneeAll" className="ml-2 text-sm font-medium">
+                All
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                id="assigneeIndividual"
+                name="assigneeMode"
+                type="radio"
+                value="individual"
+                className="h-4 w-4 border-gray-300 text-gray-600 focus:ring-2"
+                checked={assigneeMode === 'individual'}
+                onChange={() => setAssigneeMode('individual')}
+              />
+              <label htmlFor="assigneeIndividual" className="ml-2 text-sm font-medium">
+                Individual
+              </label>
+            </div>
+          </div>
+          <div id="assigneeMode-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.assigneeMode &&
+              state.errors.assigneeMode.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
+        </div>
+
+        {/* Assignees (visible only if 'Individual' is selected)
+        {assigneeMode === 'individual' && (
+          <div className="mb-4">
+            <label htmlFor="assignees" className="mb-2 block text-sm font-medium">
+              Assignees
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <select
+                id="assignees"
+                name="assignees"
+                className="block w-full rounded-md border border-gray-200 py-2 px-3 text-sm"
+                multiple
+                aria-describedby="assignees-error"
+              >
+                {students.map((student) => (
+                  <option key={student.id} value={student.id}>
+                    {student.name}
+                  </option>
+                ))}
+              </select>
+              <div id="assignees-error" aria-live="polite" aria-atomic="true">
+                {state.errors?.assignees &&
+                  state.errors.assignees.map((error: string) => (
+                    <p className="mt-2 text-sm text-red-500" key={error}>
+                      {error}
+                    </p>
+                  ))}
               </div>
             </div>
           </div>
-        </fieldset> */}
+        )}  */}
+        
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link

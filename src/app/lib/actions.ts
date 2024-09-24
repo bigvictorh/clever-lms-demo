@@ -52,7 +52,7 @@ export async function createAssignment(section_id: string, prevState: State, for
     // Validate form fields using Zod
     const validatedFields = CreateAssignment.safeParse({
         title: formData.get('title'),
-        description: "First Assignment",
+        description: formData.get('description'),
         dueDate: formData.get('dueDate'),
         points_possible: 100,
         submission_types: ['link']
@@ -70,9 +70,7 @@ export async function createAssignment(section_id: string, prevState: State, for
     const attachments = [
         {  
             "url": "http://localhost:3000/assignment",  
-            "type": "link",  
-            "title": "Math Homework",  
-            "description": "A sample of math problems"  
+            "type": "link",
         }
     ]
 
