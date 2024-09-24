@@ -61,24 +61,33 @@ export class Section {
 };
 
 export class Assignment {
-  id: string;
-  section_id: string;
   title: string;
+  dueDate: Date;
+  attachments: { url: string; type: string; title: string; description: string }[];
   description: string;
-  due_date: string;
-  points_possible: Number;
-  submission_types: Array<String>;
+  assigneeMode: string;
+  pointsPossible: number;
+  submissionTypes: string[];
+  data: any;
 
-  constructor(data) {
-    this.id = data.id;
-    this.section_id = data.section_id;
+  constructor(data: {
+    title: string;
+    dueDate: Date;
+    attachments: { url: string; type: string; title: string; description: string }[];
+    description: string;
+    assigneeMode: string;
+    pointsPossible: number;
+    submissionTypes: string[];
+  }) {
     this.title = data.title;
+    this.dueDate = data.dueDate;
+    this.attachments = data.attachments;
     this.description = data.description;
-    this.due_date = data.due_date;
-    this.points_possible = data.points_possible;
-    this.submission_types = data.submission_types;
+    this.assigneeMode = data.assigneeMode;
+    this.pointsPossible = data.pointsPossible;
+    this.submissionTypes = data.submissionTypes;
   }
-};
+}
 
 export class Submission {
   id: string;

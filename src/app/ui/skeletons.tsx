@@ -193,3 +193,51 @@ export function AssignmentsTableSkeleton() {
     </div>
   );
 }
+
+export function AssignmentFields({ fields }: { fields: { name: string; value: string }[] }) {
+  return (
+    <div className="relative w-full md:w-1/2 flex flex-col overflow-hidden bg-gray-100 p-4 rounded-xl">
+      <div className="flex grow flex-col justify-between rounded-xl bg-white p-6">
+        {fields.map((field, index) => (
+          <div key={index} className="flex flex-row items-center justify-between border-b border-gray-100 py-4">
+            <div className="flex items-center">
+              <div className="min-w-0">
+                
+                {/* Field Name */}
+                <div className="h-5 w-40 rounded-md bg-white-100">
+                  <p className="text-sm font-medium text-gray-600">{field.name}</p>
+                </div>
+                
+                {/* Field Value */}
+                <div className="mt-2 h-4 w-64 rounded-md bg-white-100">
+                  <p className="text-md font-bold text-gray-900">
+                    {field.value || <span className="text-gray-400">No value provided</span>}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function AssignmentFieldsSkeleton() {
+  return (
+    <div
+      className={`${shimmer} relative flex w-full flex-col overflow-hidden md:col-span-4`}
+    >
+      <div className="mb-4 h-8 w-36 rounded-md bg-gray-100" />
+      <div className="flex grow flex-col justify-between rounded-xl bg-gray-100 p-4">
+        <div className="bg-white px-6">
+          <AssignmentFields fields={[]} />
+          <div className="flex items-center pb-2 pt-6">
+            <div className="h-5 w-5 rounded-full bg-gray-200" />
+            <div className="ml-2 h-4 w-20 rounded-md bg-gray-200" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -42,8 +42,20 @@ export class CleverDataFetcher {
 
    async getAssignment(sectionId: string, assignmentId: string) {
     noStore();
-    const assignmentData = await this.fetch(`https://api.clever.com/v3.1/sections/${sectionId}/assignments/${assignmentId}`)
-    return assignmentData;
+    const assignmentData = await this.fetch(`https://api.clever.com/v3.1/sections/${sectionId}/assignments/${assignmentId}`);
+    console.log('API Response:', assignmentData); // Debug the response
+
+    const assignment = new Assignment({
+      title: assignmentData.title,
+      dueDate: new Date(assignmentData.due_date), // Convert due_date to JS Date object
+      attachments: assignmentData.attachments,
+      description: assignmentData.description,
+      assigneeMode: assignmentData.assignee_mode,
+      pointsPossible: assignmentData.points_possible,
+      submissionTypes: assignmentData.submission_types,
+    });
+
+    return assignmentData.data;
   }
 
   async getSubmissions(sectionId: string, assignmentId: string) {
