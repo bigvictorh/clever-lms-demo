@@ -1,9 +1,10 @@
 import { inter } from '@/app/ui/fonts';
 import MySections from '@/app/ui/dashboard/my-sections';
+import MyStudents from '@/app/ui/dashboard/my-students'
 //import CardWrapper from '@/app/ui/dashboard/cards';
 //import Card from '@/app/ui/dashboard/cards';
 import { Suspense } from 'react';
-import { SectionSkeleton, CardsSkeleton, MySectionsSkeleton } from '@/app/ui/skeletons';
+import { SectionSkeleton, CardsSkeleton, MySectionsSkeleton, MyStudentsSkeleton } from '@/app/ui/skeletons';
 import { cookies } from 'next/headers'; // To access the cookies
 import { verifySessionToken } from '@/app/lib/session';
 import { JwtPayload } from 'jsonwebtoken'; 
@@ -49,6 +50,13 @@ export default async function Home() {
       <Suspense fallback={<MySectionsSkeleton />}>
         <MySections />
         </Suspense>
+
+
+        <Suspense fallback={<MyStudentsSkeleton/>}>
+        <MyStudents/>
+        </Suspense>
+
+
       </div>
     </main>
   );
