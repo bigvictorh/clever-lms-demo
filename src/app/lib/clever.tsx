@@ -3,6 +3,7 @@
 import { Student, Section, Assignment, Submission, AssignmentSql, SectionIdSql } from '@/app/lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { sql } from '@vercel/postgres';
+import { userAgent } from '../../../node_modules/next/server';
 
 const token = process.env.DAC_TOKEN
 
@@ -182,6 +183,14 @@ export async function fetchAssignmentById(id: string) {
     throw new Error('Failed to fetch assignment.');
   }
 }
+
+
+
+
+
+
+
+
 
 export async function fetchSectionByAssignmentId(id: string) {
   noStore();
